@@ -4,7 +4,7 @@ import pandas as pd
 file_path = './dados/MICRODADOS_CADASTRO_CURSOS_2024.csv'
 
 # colunas que você quer
-use_cols = ['NU_ANO_CENSO', 'NO_REGIAO', 'NO_UF']
+use_cols = ['QT_SIT_TRANCADA', 'QT_SIT_DESVINCULADO', 'QT_SIT_TRANSFERIDO', 'QT_SIT_FALECIDO', 'QT_MAT', 'QT_CONC', 'QT_ING']
 
 # tenta ler somente essas colunas com alguns encodings comuns
 for enc in ('cp1252', 'latin1', 'utf-8'):
@@ -29,7 +29,7 @@ else:
 
 # mostrar resultado e salvar amostra
 print("Shape:", df_small.shape)
-print(df_small.head(50).to_string(index=False))
+print(df_small.head(150).to_string(index=False))
 
 # salvar amostra para abrir no Excel se quiser
 df_small.head(500).to_csv('./dados/sample_cols_nuanocenso_noregiao_nou_f.csv', index=False, sep=';')
