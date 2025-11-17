@@ -4,9 +4,7 @@ from sklearn.preprocessing import StandardScaler
 
 file_path = './dados/MICRODADOS_CADASTRO_CURSOS_2024.csv'
 
-# ================================
 # COLUNAS A SEREM CARREGADAS
-# ================================
 cols_numericas = [
     'QT_SIT_TRANCADA', 'QT_SIT_DESVINCULADO', 'QT_SIT_TRANSFERIDO',
     'QT_SIT_FALECIDO', 'QT_MAT', 'QT_CONC', 'QT_ING'
@@ -16,9 +14,8 @@ cols_categoricas = ['NO_CURSO', 'NO_MUNICIPIO', 'SG_UF']
 
 use_cols = cols_numericas + cols_categoricas
 
-# ================================
-# 1) DETECTAR COLUNAS REAIS DO CSV
-# ================================
+# DETECTAR COLUNAS REAIS DO CSV
+
 df_test = pd.read_csv(file_path, sep=';', encoding='cp1252', nrows=10)
 df_test.columns = df_test.columns.str.strip()
 
@@ -44,9 +41,8 @@ cols_validas = [v for v in col_map.values() if v is not None]
 print("\n➡ COLUNAS QUE SERÃO LIDAS:")
 print(cols_validas)
 
-# ================================
-# 2) LEITURA FINAL DO CSV
-# ================================
+
+# leitura CSV com colunas válidas
 df = pd.read_csv(
     file_path,
     sep=';',
@@ -59,9 +55,7 @@ df = pd.read_csv(
 
 df.columns = df.columns.str.strip()
 
-# ================================
-# ⭐ FILTRO DA PARAÍBA (PB)
-# ================================
+# filtro PB
 if "SG_UF" in col_map and col_map["SG_UF"] is not None:
     col_real = col_map["SG_UF"]
     print(f"\n➡ Filtrando registros onde {col_real} == 'PB' ...")
@@ -73,10 +67,8 @@ else:
 
 df_tratado = df.copy()
 
-# ================================
-# PASSO 1 — CONVERSÃO PARA NUMÉRICO
-# ================================
-print("\n[PASSO 1 & 3] Conversão Numérica e Nulos...")
+
+print("\nConversão Numérica e Nulos...")
 
 for col in cols_numericas:
     if col_map[col] is not None:
@@ -86,10 +78,8 @@ for col in cols_numericas:
 
 df_tratado[cols_numericas] = df_tratado[cols_numericas].fillna(0)
 
-# ================================
-# PASSO 2 — TARGET EVASÃO
-# ================================
-print("[PASSO 2] Criando variável alvo 'EVASAO'...")
+
+print("Criando variável alvo 'EVASAO'...")
 
 df_tratado['EVASAO'] = (
     (df_tratado['QT_SIT_DESVINCULADO'] > 0) |
@@ -98,10 +88,7 @@ df_tratado['EVASAO'] = (
     (df_tratado['QT_SIT_FALECIDO'] > 0)
 ).astype(int)
 
-# ================================
-# PASSO 4 — FEATURE ENGINEERING
-# ================================
-print("[PASSO 4] Feature Engineering...")
+print("Extraindo dados Brutos")
 
 df_tratado['QT_MAT_SAFE'] = np.where(df_tratado['QT_MAT'] == 0, 1, df_tratado['QT_MAT'])
 
@@ -113,10 +100,8 @@ df_tratado['TAXA_EVASAO'] = (
 
 df_tratado = df_tratado.drop(columns=['QT_MAT_SAFE'])
 
-# ================================
-# PASSO 5 — REMOVER COLUNAS DE ORIGEM
-# ================================
-print("[PASSO 5] Removendo colunas de origem...")
+
+print("Removendo colunas de evasao individuais...")
 
 cols_to_drop = [
     'QT_SIT_DESVINCULADO',
@@ -127,12 +112,10 @@ cols_to_drop = [
 
 df_final = df_tratado.drop(columns=cols_to_drop)
 
-# ================================
-# SAÍDA FINAL
-# ================================
+
 print("\nShape FINAL:", df_final.shape)
 print("\nPRIMEIRAS 50 LINHAS:")
-print(df_final.head(50).to_string(index=False))
+print(df_final.head(500).to_string(index=False))
 
 df_final.head(500).to_csv('./dados/sample_cols_tratado_final.csv', index=False, sep=';')
 print("\nAmostra salva em: ./dados/sample_cols_tratado_final.csv")
