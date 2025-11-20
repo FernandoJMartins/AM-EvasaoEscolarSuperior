@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 sample_file = './dados/sample_cols_tratado_final.csv'
-orig_file = './dados/MICRODADOS_CADASTRO_CURSOS_2024.csv'
+orig_file = './dados/MICRODADOS_CADASTRO_CURSOS_2024.CSV'
 
 def load_data():
     if os.path.exists(sample_file):

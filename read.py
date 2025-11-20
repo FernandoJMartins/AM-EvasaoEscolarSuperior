@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-file_path = './dados/MICRODADOS_CADASTRO_CURSOS_2024.csv'
+file_path = './dados/MICRODADOS_CADASTRO_CURSOS_2024.CSV'
 
 cols_numericas = [
     'QT_SIT_TRANCADA', 'QT_SIT_DESVINCULADO', 'QT_SIT_TRANSFERIDO',
